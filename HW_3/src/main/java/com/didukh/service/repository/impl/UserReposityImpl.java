@@ -1,7 +1,7 @@
 package com.didukh.service.repository.impl;
 
-import com.didukh.service.Model.Activity;
-import com.didukh.service.Model.User;
+import com.didukh.service.model.Activity;
+import com.didukh.service.model.User;
 import com.didukh.service.repository.UserRepository;
 import org.springframework.stereotype.Component;
 

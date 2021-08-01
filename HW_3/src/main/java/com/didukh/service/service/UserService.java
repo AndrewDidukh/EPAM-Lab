@@ -1,7 +1,5 @@
 package com.didukh.service.service;
 
-import com.didukh.service.Model.Activity;
-import com.didukh.service.Model.User;
 import com.didukh.service.dto.ActivityDto;
 import com.didukh.service.dto.UserDto;
 

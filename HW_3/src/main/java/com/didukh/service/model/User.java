@@ -1,32 +1,31 @@
-package com.didukh.service.dto;
+package com.didukh.service.model;
 
-import com.didukh.service.model.Activity;
+
 import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
 
+
 @Data
 @Builder
-public class UserDto {
+public class User {
 
     private String firstName;
     private String lastName;
     private String email;
     private String password;
-    private String repeatPassword;
     private List<Activity> activities;
 
-    public UserDto(String firstName, String lastName, String email, String password, String repeatPassword, List<Activity> activities) {
+    public User(String firstName, String lastName, String email, String password, List<Activity> activities) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
-        this.repeatPassword = repeatPassword;
         this.activities = activities;
     }
 
-    public UserDto(){
+    public User(){
 
     }
 }

@@ -1,9 +1,7 @@
 package com.didukh.service.repository;
 
-import com.didukh.service.Model.Activity;
-import com.didukh.service.Model.User;
-
-import java.util.List;
+import com.didukh.service.model.Activity;
+import com.didukh.service.model.User;
 
 public interface UserRepository {
 
