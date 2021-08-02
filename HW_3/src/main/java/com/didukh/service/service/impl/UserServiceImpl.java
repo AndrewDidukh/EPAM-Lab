@@ -19,30 +19,30 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final ActivityMapper activityMapper;
-    private final UserMapper userMapper;
+//    private final ActivityMapper activityMapper;
+//    private final UserMapper userMapper;
 
     @Override
     public UserDto getUser(String email) {
         log.info("getUser by email {}", email);
         User user = userRepository.getUser(email);
-        return userMapper.mapUserToUserDto(user);
+        return UserMapper.INSTANCE.mapUserToUserDto(user);
     }
 
     @Override
     public UserDto createUser(UserDto userDto) {
         log.info("createUser with email {}", userDto.getEmail());
-        User user = userMapper.mapUserDtoToUser(userDto);
+        User user = UserMapper.INSTANCE.mapUserDtoToUser(userDto);
         user = userRepository.createUser(user);
-        return userMapper.mapUserToUserDto(user);
+        return UserMapper.INSTANCE.mapUserToUserDto(user);
     }
 
     @Override
     public UserDto updateUser(String email, UserDto userDto) {
         log.info("updateUser with email {}", userDto.getEmail());
-        User user = userMapper.mapUserDtoToUser(userDto);
+        User user = UserMapper.INSTANCE.mapUserDtoToUser(userDto);
         user = userRepository.updateUser(email, user);
-        return userMapper.mapUserToUserDto(user);
+        return UserMapper.INSTANCE.mapUserToUserDto(user);
     }
 
     @Override
@@ -55,23 +55,23 @@ public class UserServiceImpl implements UserService {
     public ActivityDto getActivity(String email, String activityName) {
         log.info("getActivity by email {} and activityName {}", email, activityName);
         Activity activity = userRepository.getActivity(email, activityName);
-        return activityMapper.mapActivityToActivityDto(activity);
+        return ActivityMapper.INSTANCE.mapActivityToActivityDto(activity);
     }
 
     @Override
     public ActivityDto createActivity(String email, ActivityDto activityDto) {
         log.info("createActivity for email {}", email);
-        Activity activity = activityMapper.mapActivityDtoToActivity(activityDto);
+        Activity activity = ActivityMapper.INSTANCE.mapActivityDtoToActivity(activityDto);
         activity = userRepository.createActivity(email,activity);
-        return activityMapper.mapActivityToActivityDto(activity);
+        return ActivityMapper.INSTANCE.mapActivityToActivityDto(activity);
     }
 
     @Override
     public ActivityDto updateActivity(String email, String activityName, ActivityDto activityDto) {
         log.info("updateActivity for email {} with activityName {}", email, activityName);
-        Activity activity = activityMapper.mapActivityDtoToActivity(activityDto);
+        Activity activity = ActivityMapper.INSTANCE.mapActivityDtoToActivity(activityDto);
         activity = userRepository.updateActivity(email, activityName, activity);
-        return activityMapper.mapActivityToActivityDto(activity);
+        return ActivityMapper.INSTANCE.mapActivityToActivityDto(activity);
     }
 
     @Override
