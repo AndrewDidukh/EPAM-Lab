@@ -3,7 +3,6 @@ package com.didukh.service.controller;
 
 import com.didukh.service.dto.ActivityDto;
 import com.didukh.service.dto.UserDto;
-import com.didukh.service.mapper.ActivityMapper;
 import com.didukh.service.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,12 +17,6 @@ public class UserController {
     private final UserService userService;
 
 
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping(value = "/{email}")
-    public UserDto getUser(@PathVariable String email) {
-        return userService.getUser(email);
-    }
-
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public UserDto createUser(@RequestBody UserDto userDto) {
@@ -31,21 +24,16 @@ public class UserController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @PutMapping(value = "/{email}")
-    public UserDto updateUser(@PathVariable String email, @RequestBody UserDto userDto) {
-        return userService.updateUser(email, userDto);
+    @GetMapping(value = "/{email}")
+    public UserDto getUser(@PathVariable String email) {
+        return userService.getUser(email);
     }
+
 
     @DeleteMapping(value = "/{email}")
     public ResponseEntity<Void> deleteUser(@PathVariable String email) {
         userService.deleteUser(email);
         return ResponseEntity.noContent().build();
-    }
-
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping(value = "/{email}/{activity}")
-    public ActivityDto getActivity(@PathVariable String email, @PathVariable String activity) {
-        return userService.getActivity(email, activity);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -55,9 +43,16 @@ public class UserController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @PutMapping(value = "/{email}/updateActivity")
-    public ActivityDto updateActivity(@PathVariable String email, @RequestBody ActivityDto activityDto) {
-        return userService.updateActivity(email, activityDto.getActivityName(), activityDto);
+    @GetMapping(value = "/{email}/{activity}")
+    public ActivityDto getActivity(@PathVariable String email, @PathVariable String activity) {
+        return userService.getActivity(email, activity);
+    }
+
+
+    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping(value = "/{email}/{activity}/addTime/{seconds}")
+    public ActivityDto addActivityTime(@PathVariable String email, @PathVariable String activity, @PathVariable long seconds) {
+        return userService.addActivityTime(email, activity, seconds);
     }
 
     @DeleteMapping(value = "/{email}/{activity}")

@@ -1,31 +1,30 @@
 package com.didukh.service.model;
 
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
-
 
 @Data
 @Builder
-public class User {
 
-    private String firstName;
-    private String lastName;
+public class User{
     private String email;
     private String password;
+    private String firstName;
+    private String lastName;
     private List<Activity> activities;
 
-    public User(String firstName, String lastName, String email, String password, List<Activity> activities) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-        this.activities = activities;
+    public List<Activity> getActivities() {
+        return activities;
     }
 
-    public User(){
-
+    public User(String email, String password, String firstName, String lastName, List<Activity> activities) {
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.activities = new ArrayList<>();
     }
 }

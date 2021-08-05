@@ -1,9 +1,13 @@
 package com.didukh.service.repository;
 
 import com.didukh.service.model.Activity;
+import com.didukh.service.model.Admin;
 import com.didukh.service.model.User;
 
-public interface UserRepository {
+import java.util.List;
+import java.util.Map;
+
+public interface AppRepository {
 
     User getUser(String email);
 
@@ -15,9 +19,22 @@ public interface UserRepository {
 
     Activity getActivity(String email, String activityName);
 
+    Activity addActivityTime(String email, String activityName, long seconds);
+
     Activity updateActivity(String email, String activityName, Activity activity);
 
     Activity createActivity(String email, Activity activity);
 
-    void deleteActivity(String email,String activityName);
+    void deleteActivity(String email, String activityName);
+
+
+    Admin createAdmin(Admin admin);
+
+    Admin getAdmin(String email);
+
+    Activity acceptActivity(String email, String activityName);
+
+    Map<String, Activity> getUnacceptedActivities();
+
+    List<User> getAllUsers();
 }
