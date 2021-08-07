@@ -23,7 +23,6 @@ public class ActivityDto  {
     @Null(message = "'duration' should be absent in request",groups = {OnUpdate.class,OnCreate.class})
     private Duration duration;
 
-    @Null(message = "'isAccepted' should be absent in request",groups = {OnUpdate.class,OnCreate.class})
     private boolean isAccepted;
 
     public ActivityDto(String activityName, Duration duration, boolean isAccepted) {
