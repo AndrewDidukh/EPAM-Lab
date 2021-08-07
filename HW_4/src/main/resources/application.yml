@@ -1,0 +1,13 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+
+
+info:
+  name: Spring Boot Application (Time Accounting), Made by Andrii Didukh
+  description: some description.
