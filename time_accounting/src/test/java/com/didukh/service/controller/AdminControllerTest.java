@@ -2,11 +2,11 @@ package com.didukh.service.controller;
 
 
 import com.didukh.service.controller.assembler.AdminAssembler;
+import com.didukh.service.controller.assembler.UserAssembler;
 import com.didukh.service.controller.model.AdminModel;
 import com.didukh.service.dto.ActivityDto;
 import com.didukh.service.dto.AdminDto;
 import com.didukh.service.dto.UserDto;
-import com.didukh.service.model.enums.ActivityType;
 import com.didukh.service.service.AdminService;
 import com.didukh.service.test.config.TestConfig;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,8 +41,12 @@ public class AdminControllerTest {
     @MockBean
     private AdminAssembler adminAssembler;
 
+    @MockBean
+    private UserAssembler userAssembler;
+
     @Autowired
     private MockMvc mockMvc;
+
 
     @Test
     void getAdminTest() throws Exception {
@@ -83,48 +86,5 @@ public class AdminControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
-    @Test
-    void getAllActivitiesTest() throws Exception {
-        List<ActivityDto> list = new ArrayList<>();
-        when(adminService.getAllActivities()).thenReturn(list);
-
-        mockMvc.perform(get("/api/v1/admin/getAllUsers"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-    }
-
-    @Test
-    void getUnacceptedActivitiesTest() throws Exception {
-        List<ActivityDto> list = new ArrayList<>();
-        when(adminService.getUnacceptedActivities()).thenReturn(list);
-
-        mockMvc.perform(get("/api/v1/admin/getUnacceptedActivities"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-    }
-
-    @Test
-    void getSortedActivitiesByNameTest() throws Exception {
-        List<ActivityDto> list = new ArrayList<>();
-        when(adminService.getSortedActivitiesByName()).thenReturn(list);
-
-        mockMvc.perform(get("/api/v1/admin/getSortedActivitiesByName"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-    }
-
-    @Test
-    void findAllByActivityTypeTest() throws Exception {
-        List<ActivityDto> list = new ArrayList<>();
-        when(adminService.findAllByActivityType(ActivityType.OTHER)).thenReturn(list);
-
-        mockMvc.perform(get("/api/v1/admin/" + ActivityType.OTHER + "/findAllByActivityType"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-    }
 
 }

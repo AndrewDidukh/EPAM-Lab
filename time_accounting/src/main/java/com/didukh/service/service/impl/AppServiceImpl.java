@@ -1,16 +1,9 @@
 package com.didukh.service.service.impl;
 
-import com.didukh.service.dto.AdminDto;
+import com.didukh.service.dto.*;
 import com.didukh.service.exception.*;
-import com.didukh.service.mapper.ActivityMapper;
-import com.didukh.service.mapper.AdminMapper;
-import com.didukh.service.mapper.UpdateMapping;
-import com.didukh.service.mapper.UserMapper;
-import com.didukh.service.model.Activity;
-import com.didukh.service.model.Admin;
-import com.didukh.service.model.User;
-import com.didukh.service.dto.ActivityDto;
-import com.didukh.service.dto.UserDto;
+import com.didukh.service.mapper.*;
+import com.didukh.service.model.*;
 import com.didukh.service.model.enums.ActivityType;
 import com.didukh.service.repository.ActivityRepository;
 import com.didukh.service.repository.AdminRepository;
@@ -27,6 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -84,16 +78,32 @@ public class AppServiceImpl implements UserService, AdminService {
     }
 
     @Override
-    public ActivityDto getActivity(String activityName) {
-        log.info("getActivity by activityName {}", activityName);
-        Activity activity = activityRepository.findByActivityName(activityName).orElseThrow(ActivityNotFoundException::new);
-        return ActivityMapper.INSTANCE.mapActivityToActivityDto(activity);
+    public UserActivityDto getActivity(String email, String activityName) {
+        log.info("getUserActivity by email {} and activityName {}", email, activityName);
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        Activity activity = user.getActivities().stream().filter(act -> act.getActivityName().equals(activityName)).findFirst().orElseThrow(ActivityNotFoundException::new);
+        UserActivity userActivity = new UserActivity(email, activity);
+        return UserActivityMapper.INSTANCE.mapUserActivityToUserActivityDto(userActivity);
     }
 
     @Override
     @Transactional
-    public ActivityDto addActivityTime(String email, String activityName, Integer minutes) {
-        log.info("addActivityTime by email {} , activityName {} with {} minutes", email, activityName, minutes);
+    public UserActivityDto createActivity(String email, ActivityDto activityDto) {
+        log.info("createUserActivity for email {}", email);
+        Activity activity = ActivityMapper.INSTANCE.mapActivityDtoToActivity(activityDto);
+        if (!Arrays.stream(ActivityType.values()).collect(Collectors.toList()).contains(activity.getActivityType())) {
+            throw new NoSuchActivityTypeException();
+        }
+        activity.setUser(userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new));
+        activity = activityRepository.save(activity);
+        UserActivity userActivity = new UserActivity(email, activity);
+        return UserActivityMapper.INSTANCE.mapUserActivityToUserActivityDto(userActivity);
+    }
+
+    @Override
+    @Transactional
+    public UserActivityDto addActivityTime(String email, String activityName, Integer minutes) {
+        log.info("addActivityTime for email {} , activityName {} with {} minutes", email, activityName, minutes);
         Activity persistedActivity = activityRepository.findByActivityName(activityName).orElseThrow(ActivityNotFoundException::new);
         if (!persistedActivity.isAccepted()) {
             throw new ActivityIsNotAcceptedException();
@@ -103,20 +113,8 @@ public class AppServiceImpl implements UserService, AdminService {
         }
         persistedActivity.addDuration(minutes);
         activityRepository.save(persistedActivity);
-        return ActivityMapper.INSTANCE.mapActivityToActivityDto(persistedActivity);
-    }
-
-    @Override
-    @Transactional
-    public ActivityDto createActivity(String email, ActivityDto activityDto) {
-        log.info("createActivity for email {}", email);
-        Activity activity = ActivityMapper.INSTANCE.mapActivityDtoToActivity(activityDto);
-        if (!Arrays.stream(ActivityType.values()).collect(Collectors.toList()).contains(activity.getActivityType())) {
-            throw new NoSuchActivityTypeException();
-        }
-        activity.setUser(userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new));
-        activity = activityRepository.save(activity);
-        return ActivityMapper.INSTANCE.mapActivityToActivityDto(activity);
+        UserActivity userActivity = new UserActivity(email, persistedActivity);
+        return UserActivityMapper.INSTANCE.mapUserActivityToUserActivityDto(userActivity);
     }
 
 
@@ -152,6 +150,14 @@ public class AppServiceImpl implements UserService, AdminService {
     }
 
     @Override
+    public List<UserDto> getAllUsers() {
+        log.info("getAllUsers");
+        List<User> users;
+        users = userRepository.findAll();
+        return UserMapper.INSTANCE.mapUsersToListDto(users);
+    }
+
+    @Override
     @Transactional
     public ActivityDto acceptActivity(String email, String activityName) {
         log.info("acceptActivity {} for email {}", activityName, email);
@@ -162,43 +168,50 @@ public class AppServiceImpl implements UserService, AdminService {
     }
 
     @Override
-    public List<ActivityDto> getAllActivities() {
+    public List<AdminActivityDto> getAllActivities() {
         log.info("getAllActivities");
-        List<Activity> activityMap;
-        activityMap = activityRepository.findAll();
-        return ActivityMapper.INSTANCE.mapActivityToActivityDtoInMap(activityMap);
+        List<Activity> activities;
+        activities = activityRepository.findAll();
+        List<AdminActivity> adminActivities = new ArrayList<>();
+        for (Activity activity : activities) {
+            adminActivities.add(new AdminActivity(activity));
+        }
+        return AdminActivityMapper.INSTANCE.mapAdminActivityListToAdminActivityDtoList(adminActivities);
     }
 
     @Override
-    public List<ActivityDto> getUnacceptedActivities() {
+    public List<AdminActivityDto> getUnacceptedActivities() {
         log.info("getUnacceptedActivities");
         Pageable pageWithTenElements = PageRequest.of(0, 10);
         List<Activity> activities = activityRepository.getUnacceptedActivities(pageWithTenElements);
-        return ActivityMapper.INSTANCE.mapActivityToActivityDtoInMap(activities);
+        List<AdminActivity> adminActivities = new ArrayList<>();
+        for (Activity activity : activities) {
+            adminActivities.add(new AdminActivity(activity));
+        }
+        return AdminActivityMapper.INSTANCE.mapAdminActivityListToAdminActivityDtoList(adminActivities);
     }
 
     @Override
-    public List<ActivityDto> getSortedActivitiesByName() {
+    public List<AdminActivityDto> getSortedActivitiesByName() {
         log.info("getUnacceptedActivities");
         List<Activity> activities = activityRepository.findAll(Sort.by("activityName"));
-        return ActivityMapper.INSTANCE.mapActivityToActivityDtoInMap(activities);
+        List<AdminActivity> adminActivities = new ArrayList<>();
+        for (Activity activity : activities) {
+            adminActivities.add(new AdminActivity(activity));
+        }
+        return AdminActivityMapper.INSTANCE.mapAdminActivityListToAdminActivityDtoList(adminActivities);
     }
 
     @Override
-    public List<ActivityDto> findAllByActivityType(ActivityType activityType) {
+    public List<AdminActivityDto> findAllByActivityType(ActivityType activityType) {
         log.info("findAllByActivityType");
         Pageable pageWithTenElements = PageRequest.of(0, 10);
         List<Activity> activities = activityRepository.findAllByActivityType(activityType, pageWithTenElements);
-        return ActivityMapper.INSTANCE.mapActivityToActivityDtoInMap(activities);
-    }
-
-
-    @Override
-    public List<UserDto> getAllUsers() {
-        log.info("getAllUsers");
-        List<User> users;
-        users = userRepository.findAll();
-        return UserMapper.INSTANCE.mapUsersToListDto(users);
+        List<AdminActivity> adminActivities = new ArrayList<>();
+        for (Activity activity : activities) {
+            adminActivities.add(new AdminActivity(activity));
+        }
+        return AdminActivityMapper.INSTANCE.mapAdminActivityListToAdminActivityDtoList(adminActivities);
     }
 
 

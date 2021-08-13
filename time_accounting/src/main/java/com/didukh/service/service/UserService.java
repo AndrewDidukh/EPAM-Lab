@@ -1,6 +1,7 @@
 package com.didukh.service.service;
 
 import com.didukh.service.dto.ActivityDto;
+import com.didukh.service.dto.UserActivityDto;
 import com.didukh.service.dto.UserDto;
 import com.didukh.service.model.Activity;
 
@@ -14,11 +15,11 @@ public interface UserService {
 
     UserDto updateUser(String email, UserDto user);
 
-    ActivityDto getActivity(String activityName);
+    UserActivityDto getActivity(String email, String activityName);
 
-    ActivityDto addActivityTime(String email, String activityName, Integer minutes);
+    UserActivityDto addActivityTime(String email, String activityName, Integer minutes);
 
-    ActivityDto createActivity(String email, ActivityDto activityDto);
+    UserActivityDto createActivity(String email, ActivityDto activityDto);
 
     void deleteActivity(String email, String activityName);
 

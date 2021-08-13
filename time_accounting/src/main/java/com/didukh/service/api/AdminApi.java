@@ -1,11 +1,10 @@
 package com.didukh.service.api;
 
 import com.didukh.service.controller.model.AdminModel;
+import com.didukh.service.controller.model.UserModel;
 import com.didukh.service.dto.ActivityDto;
 import com.didukh.service.dto.AdminDto;
-import com.didukh.service.dto.UserDto;
 import com.didukh.service.dto.group.OnCreate;
-import com.didukh.service.model.enums.ActivityType;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -45,25 +44,7 @@ public interface AdminApi {
     @ApiOperation("Get All Users")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/getAllUsers")
-    List<UserDto> getAllUsers();
+    List<UserModel> getAllUsers();
 
-    @ApiOperation("Get All Activities")
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping(value = "/getAllActivities")
-    List<ActivityDto> getAllActivities();
 
-    @ApiOperation("Get unaccepted activities")
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping(value = "/getUnacceptedActivities")
-    List<ActivityDto> getUnacceptedActivities();
-
-    @ApiOperation("Get sorted activities by name")
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping(value = "/getSortedActivitiesByName")
-    List<ActivityDto> getSortedActivitiesByName();
-
-    @ApiOperation("Get sorted activities by type")
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping(value = "{activityType}/findAllByActivityType")
-    List<ActivityDto> findAllByActivityType(@PathVariable ActivityType activityType);
 }

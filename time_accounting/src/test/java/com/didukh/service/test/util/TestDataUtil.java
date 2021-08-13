@@ -3,6 +3,7 @@ package com.didukh.service.test.util;
 
 import com.didukh.service.dto.ActivityDto;
 import com.didukh.service.dto.AdminDto;
+import com.didukh.service.dto.UserActivityDto;
 import com.didukh.service.dto.UserDto;
 import com.didukh.service.model.Activity;
 import com.didukh.service.model.Admin;
@@ -10,6 +11,8 @@ import com.didukh.service.model.User;
 import com.didukh.service.model.enums.ActivityType;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TestDataUtil {
@@ -29,6 +32,7 @@ public class TestDataUtil {
                 .lastName(LAST_NAME)
                 .email(TEST_EMAIL)
                 .password(PASSWORD)
+                .activities(new ArrayList<>())
                 .build();
     }
 
@@ -39,6 +43,16 @@ public class TestDataUtil {
                 .email(TEST_EMAIL)
                 .password(PASSWORD)
                 .repeatPassword(PASSWORD)
+                .build();
+    }
+
+    public static UserActivityDto createUserActivityDto(){
+        return UserActivityDto.builder()
+                .activityName(ACTIVITY_NAME)
+                .activityType(ActivityType.OTHER)
+                .duration(0)
+                .isAccepted(false)
+                .email(TEST_EMAIL)
                 .build();
     }
 

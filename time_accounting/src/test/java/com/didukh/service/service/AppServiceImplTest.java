@@ -2,6 +2,7 @@ package com.didukh.service.service;
 
 import com.didukh.service.dto.ActivityDto;
 import com.didukh.service.dto.AdminDto;
+import com.didukh.service.dto.UserActivityDto;
 import com.didukh.service.dto.UserDto;
 import com.didukh.service.exception.*;
 import com.didukh.service.model.Activity;
@@ -143,11 +144,13 @@ public class AppServiceImplTest {
     @Test
     void getActivityTest() {
         Activity activity = createActivity();
-        when(activityRepository.findByActivityName(ACTIVITY_NAME)).thenReturn(Optional.of(activity));
+        User user = createUser();
+        user.getActivities().add(activity);
+        when(userRepository.findByEmail(TEST_EMAIL)).thenReturn(Optional.of(user));
 
-        ActivityDto activityDto = appService.getActivity(ACTIVITY_NAME);
+        UserActivityDto userActivityDto = appService.getActivity(TEST_EMAIL,ACTIVITY_NAME);
 
-        assertThat(activityDto, allOf(
+        assertThat(userActivityDto, allOf(
                 hasProperty("activityName", equalTo(activity.getActivityName())),
                 hasProperty("duration", equalTo(activity.getDuration())),
                 hasProperty("activityType", equalTo(activity.getActivityType()))
@@ -156,8 +159,8 @@ public class AppServiceImplTest {
 
     @Test
     void getActivityNotFoundTest() {
-        when(activityRepository.findByActivityName(ACTIVITY_NAME)).thenReturn(Optional.empty());
-        assertThrows(ActivityNotFoundException.class, () -> appService.getActivity(ACTIVITY_NAME));
+        when(userRepository.findByEmail(TEST_EMAIL)).thenReturn(Optional.empty());
+        assertThrows(UserNotFoundException.class, () -> appService.getActivity(TEST_EMAIL,ACTIVITY_NAME));
     }
 
     @Test
@@ -167,9 +170,9 @@ public class AppServiceImplTest {
         when(activityRepository.findByActivityName(ACTIVITY_NAME)).thenReturn(Optional.of(activity));
         when(activityRepository.save(any())).thenReturn(activity);
 
-        ActivityDto activityDto = appService.addActivityTime(TEST_EMAIL, ACTIVITY_NAME, DURATION);
+        UserActivityDto userActivityDto = appService.addActivityTime(TEST_EMAIL, ACTIVITY_NAME, DURATION);
 
-        assertThat(activityDto, allOf(
+        assertThat(userActivityDto, allOf(
                 hasProperty("duration", equalTo(activity.getDuration()))
         ));
     }
@@ -195,10 +198,10 @@ public class AppServiceImplTest {
         when(userRepository.findByEmail(testUserDto.getEmail())).thenReturn(Optional.of(testUser));
         when(activityRepository.save(any())).thenReturn(testActivity);
 
-        ActivityDto activityDto = appService.createActivity(TEST_EMAIL, testActivityDto);
+        UserActivityDto userActivityDto = appService.createActivity(TEST_EMAIL, testActivityDto);
 
 
-        assertThat(activityDto, allOf(
+        assertThat(userActivityDto, allOf(
                 hasProperty("activityName", equalTo(testActivity.getActivityName())),
                 hasProperty("duration", equalTo(testActivity.getDuration())),
                 hasProperty("activityType", equalTo(testActivity.getActivityType()))
