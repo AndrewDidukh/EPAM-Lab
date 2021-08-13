@@ -13,7 +13,7 @@ import org.springframework.hateoas.RepresentationModel;
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @NoArgsConstructor
-public class AdminModel extends RepresentationModel<UserModel> {
+public class AdminModel extends RepresentationModel<AdminModel> {
 
     @JsonUnwrapped
     private AdminDto adminDto;

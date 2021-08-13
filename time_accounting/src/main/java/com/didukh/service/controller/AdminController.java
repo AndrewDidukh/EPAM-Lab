@@ -10,6 +10,12 @@ import com.didukh.service.dto.AdminDto;
 import com.didukh.service.dto.UserDto;
 import com.didukh.service.service.AdminService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -22,6 +28,7 @@ public class AdminController implements AdminApi {
     private final AdminService adminService;
     private final AdminAssembler adminAssembler;
     private final UserAssembler userAssembler;
+    private final PagedResourcesAssembler<UserDto> pagedResourcesAssembler;
 
     public AdminModel createAdmin(AdminDto adminDto) {
         AdminDto outAdminDto = adminService.createAdmin(adminDto);
@@ -37,13 +44,11 @@ public class AdminController implements AdminApi {
         return adminService.acceptActivity(email, activityName);
     }
 
-    public List<UserModel> getAllUsers() {
-        List<UserModel> modelList = new ArrayList<>();
-        List<UserDto> list = adminService.getAllUsers();
-        for (UserDto user : list) {
-            modelList.add(userAssembler.toModel(user));
-        }
-        return modelList;
+    public PagedModel<UserModel> getAllUsers(Pageable pageable) {
+
+        Page<UserDto> page = adminService.getAllUsers(pageable);
+
+        return pagedResourcesAssembler.toModel(page,userAssembler);
     }
 
 

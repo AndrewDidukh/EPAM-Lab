@@ -9,6 +9,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +47,7 @@ public interface AdminApi {
     @ApiOperation("Get All Users")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/getAllUsers")
-    List<UserModel> getAllUsers();
+    PagedModel<UserModel> getAllUsers(Pageable pageable);
 
 
 }

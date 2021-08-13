@@ -14,9 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -150,11 +148,9 @@ public class AppServiceImpl implements UserService, AdminService {
     }
 
     @Override
-    public List<UserDto> getAllUsers() {
+    public Page<UserDto> getAllUsers(Pageable pageable) {
         log.info("getAllUsers");
-        List<User> users;
-        users = userRepository.findAll();
-        return UserMapper.INSTANCE.mapUsersToListDto(users);
+        return userRepository.findAll(pageable).map(UserMapper.INSTANCE::mapUserToUserDto);
     }
 
     @Override
@@ -168,50 +164,27 @@ public class AppServiceImpl implements UserService, AdminService {
     }
 
     @Override
-    public List<AdminActivityDto> getAllActivities() {
+    public Page<AdminActivityDto> getAllActivities(Pageable pageable) {
         log.info("getAllActivities");
-        List<Activity> activities;
-        activities = activityRepository.findAll();
-        List<AdminActivity> adminActivities = new ArrayList<>();
-        for (Activity activity : activities) {
-            adminActivities.add(new AdminActivity(activity));
-        }
-        return AdminActivityMapper.INSTANCE.mapAdminActivityListToAdminActivityDtoList(adminActivities);
+        return activityRepository.findAll(pageable).map(ActivityToAdminActivity.INSTANCE::mapActivityToAdminActivityDto);
     }
 
     @Override
-    public List<AdminActivityDto> getUnacceptedActivities() {
+    public Page<AdminActivityDto> getUnacceptedActivities(Pageable pageable) {
         log.info("getUnacceptedActivities");
-        Pageable pageWithTenElements = PageRequest.of(0, 10);
-        List<Activity> activities = activityRepository.getUnacceptedActivities(pageWithTenElements);
-        List<AdminActivity> adminActivities = new ArrayList<>();
-        for (Activity activity : activities) {
-            adminActivities.add(new AdminActivity(activity));
-        }
-        return AdminActivityMapper.INSTANCE.mapAdminActivityListToAdminActivityDtoList(adminActivities);
+        return activityRepository.getUnacceptedActivities(pageable).map(ActivityToAdminActivity.INSTANCE::mapActivityToAdminActivityDto);
     }
 
     @Override
-    public List<AdminActivityDto> getSortedActivitiesByName() {
+    public Page<AdminActivityDto> getSortedActivitiesByName(Pageable pageable) {
         log.info("getUnacceptedActivities");
-        List<Activity> activities = activityRepository.findAll(Sort.by("activityName"));
-        List<AdminActivity> adminActivities = new ArrayList<>();
-        for (Activity activity : activities) {
-            adminActivities.add(new AdminActivity(activity));
-        }
-        return AdminActivityMapper.INSTANCE.mapAdminActivityListToAdminActivityDtoList(adminActivities);
+        return activityRepository.findAll(pageable).map(ActivityToAdminActivity.INSTANCE::mapActivityToAdminActivityDto);
     }
 
     @Override
-    public List<AdminActivityDto> findAllByActivityType(ActivityType activityType) {
+    public Page<AdminActivityDto> findAllByActivityType(ActivityType activityType,Pageable pageable) {
         log.info("findAllByActivityType");
-        Pageable pageWithTenElements = PageRequest.of(0, 10);
-        List<Activity> activities = activityRepository.findAllByActivityType(activityType, pageWithTenElements);
-        List<AdminActivity> adminActivities = new ArrayList<>();
-        for (Activity activity : activities) {
-            adminActivities.add(new AdminActivity(activity));
-        }
-        return AdminActivityMapper.INSTANCE.mapAdminActivityListToAdminActivityDtoList(adminActivities);
+        return activityRepository.findAllByActivityType(activityType, pageable).map(ActivityToAdminActivity.INSTANCE::mapActivityToAdminActivityDto);
     }
 
 

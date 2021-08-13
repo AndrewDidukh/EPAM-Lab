@@ -6,6 +6,9 @@ import com.didukh.service.dto.AdminDto;
 import com.didukh.service.dto.UserDto;
 import com.didukh.service.model.AdminActivity;
 import com.didukh.service.model.enums.ActivityType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.PagedModel;
 
 
 import java.util.List;
@@ -18,13 +21,13 @@ public interface AdminService {
 
     ActivityDto acceptActivity(String email, String activityName);
 
-    List<UserDto> getAllUsers();
+    Page<UserDto> getAllUsers(Pageable pageable);
 
-    List<AdminActivityDto> getAllActivities();
+    Page<AdminActivityDto> getAllActivities(Pageable pageable);
 
-    List<AdminActivityDto> getUnacceptedActivities();
+    Page<AdminActivityDto> getUnacceptedActivities(Pageable pageable);
 
-    List<AdminActivityDto> getSortedActivitiesByName();
+    Page<AdminActivityDto> getSortedActivitiesByName(Pageable pageable);
 
-    List<AdminActivityDto> findAllByActivityType(ActivityType activityType);
+    Page<AdminActivityDto> findAllByActivityType(ActivityType activityType,Pageable pageable);
 }

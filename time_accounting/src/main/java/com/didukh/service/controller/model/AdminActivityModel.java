@@ -6,9 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.RepresentationModel;
 
-import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -16,5 +17,5 @@ import java.util.List;
 @NoArgsConstructor
 public class AdminActivityModel extends RepresentationModel<AdminActivityModel> {
     @JsonUnwrapped
-    private List<AdminActivityDto> adminActivityDto;
+    private AdminActivityDto adminActivityDto;
 }

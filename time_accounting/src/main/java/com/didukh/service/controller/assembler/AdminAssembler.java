@@ -3,7 +3,11 @@ package com.didukh.service.controller.assembler;
 import com.didukh.service.controller.AdminController;
 import com.didukh.service.controller.model.AdminModel;
 import com.didukh.service.dto.AdminDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
@@ -27,11 +31,12 @@ public class AdminAssembler extends RepresentationModelAssemblerSupport<AdminDto
     @Override
     public AdminModel toModel(AdminDto entity) {
         AdminModel adminModel = new AdminModel(entity);
+        Pageable page = PageRequest.of(0,10);
 
         Link get = linkTo(methodOn(AdminController.class).getAdmin(entity.getEmail())).withRel(GET_ADMIN);
         Link create = linkTo(methodOn(AdminController.class).createAdmin(entity)).withRel(CREATE_ADMIN);
         Link accept = linkTo(methodOn(AdminController.class).acceptActivity(null,null)).withRel(ACCEPT_ACTIVITY);
-        Link get_all_users = linkTo(methodOn(AdminController.class).getAllUsers()).withRel(GET_ALL_USERS);
+        Link get_all_users = linkTo(methodOn(AdminController.class).getAllUsers(page)).withRel(GET_ALL_USERS);
 
 
         adminModel.add(get,create,get_all_users,accept);
