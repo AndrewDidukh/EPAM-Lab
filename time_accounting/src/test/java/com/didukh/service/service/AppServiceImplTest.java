@@ -1,9 +1,6 @@
 package com.didukh.service.service;
 
-import com.didukh.service.dto.ActivityDto;
-import com.didukh.service.dto.AdminDto;
-import com.didukh.service.dto.UserActivityDto;
-import com.didukh.service.dto.UserDto;
+import com.didukh.service.dto.*;
 import com.didukh.service.exception.*;
 import com.didukh.service.model.Activity;
 import com.didukh.service.model.Admin;
@@ -21,6 +18,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
@@ -32,8 +32,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -51,6 +50,12 @@ public class AppServiceImplTest {
 
     @Mock
     private AdminRepository adminRepository;
+
+    @Mock
+    private Pageable pageable;
+
+    @Mock
+    private Page<AdminActivityDto> page= new PageImpl<>(createAdminActivityDto());
 
     @Test
     void getUserTest() {
@@ -284,44 +289,4 @@ public class AppServiceImplTest {
 
         assertEquals(activity.isAccepted(), activityDto.isAccepted());
     }
-
-
-    /*To make it short - there's no way to unit test Spring Data JPA repositories
-    reasonably for a simple reason: it's way too cumbersome to mock all the parts of
-    the JPA API we invoke to bootstrap the repositories. Unit tests don't make too
-    much sense here anyway, as you're usually not writing any implementation code
-    yourself.*/
-
-    //written for 100%  service coverage
-//    @Test
-//    void getAllActivitiesTest() {
-//        appService.getAllActivities();
-//        assert true;
-//    }
-//
-//    @Test
-//    void getUnacceptedActivitiesTest() {
-//        appService.getUnacceptedActivities();
-//        assert true;
-//    }
-//
-//    @Test
-//    void getSortedActivitiesByNameTest() {
-//        appService.getSortedActivitiesByName();
-//        assert true;
-//    }
-//
-//    @Test
-//    void findAllByActivityTypeTest() {
-//        appService.findAllByActivityType(ActivityType.EVENT);
-//        assert true;
-//    }
-//
-//
-//    @Test
-//    void getAllUsersTest() {
-//        Pageable pageable = PageRequest.of(0,10);
-//        appService.getAllUsers(pageable);
-//        assert true;
-//    }
 }
