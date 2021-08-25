@@ -2,15 +2,13 @@ package com.didukh.routesservice.model;
 
 import com.didukh.routesservice.group.OnCreate;
 import com.didukh.routesservice.group.OnUpdate;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Null;
 
 @Data
@@ -26,4 +24,7 @@ public class Train {
     private double price;
     private int allSeatsCount;
     private int availableSeatsCount;
+    @ManyToOne()
+    @JsonBackReference
+    private Route route;
 }

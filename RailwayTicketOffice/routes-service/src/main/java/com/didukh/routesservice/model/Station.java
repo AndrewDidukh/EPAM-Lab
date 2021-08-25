@@ -2,6 +2,7 @@ package com.didukh.routesservice.model;
 
 import com.didukh.routesservice.group.OnCreate;
 import com.didukh.routesservice.group.OnUpdate;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,4 +25,8 @@ public class Station {
     private String stationName;
     private LocalDateTime getOffTime;
     private LocalDateTime arrivalTime;
+
+    @ManyToOne()
+    @JsonBackReference
+    private Route route;
 }
