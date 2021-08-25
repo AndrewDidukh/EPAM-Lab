@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
@@ -32,7 +33,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -55,7 +57,7 @@ public class AppServiceImplTest {
     private Pageable pageable;
 
     @Mock
-    private Page<AdminActivityDto> page= new PageImpl<>(createAdminActivityDto());
+    private Page<AdminActivityDto> page= Mockito.mock(Page.class);
 
     @Test
     void getUserTest() {
@@ -288,5 +290,40 @@ public class AppServiceImplTest {
         ActivityDto activityDto = appService.acceptActivity(TEST_EMAIL, ACTIVITY_NAME);
 
         assertEquals(activity.isAccepted(), activityDto.isAccepted());
+    }
+
+
+    @Test
+    void getAllActivitiesTest() {
+        when(appService.getAllActivities(pageable)).thenReturn(page);
+
+        appService.getAllActivities(pageable);
+        assert true;
+    }
+
+    @Test
+    void getUnacceptedActivitiesTest() {
+        appService.getUnacceptedActivities(pageable);
+        assert true;
+    }
+
+    @Test
+    void getSortedActivitiesByNameTest() {
+        appService.getSortedActivitiesByName(pageable);
+        assert true;
+    }
+
+    @Test
+    void findAllByActivityTypeTest() {
+        appService.findAllByActivityType(ActivityType.EVENT,pageable);
+        assert true;
+    }
+
+
+    @Test
+    void getAllUsersTest() {
+        Pageable pageable = PageRequest.of(0,10);
+        appService.getAllUsers(pageable);
+        assert true;
     }
 }
