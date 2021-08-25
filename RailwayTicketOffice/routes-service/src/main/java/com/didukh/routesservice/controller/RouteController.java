@@ -9,8 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.web.bind.annotation.RestController;
 
-
+@RestController
 @RequiredArgsConstructor
 public class RouteController implements RouteApi {
 

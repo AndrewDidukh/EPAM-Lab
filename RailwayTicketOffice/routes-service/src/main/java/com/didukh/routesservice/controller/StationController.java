@@ -2,44 +2,49 @@ package com.didukh.routesservice.controller;
 
 import com.didukh.routesservice.api.StationApi;
 import com.didukh.routesservice.controller.assembler.RouteAssembler;
+import com.didukh.routesservice.controller.assembler.StationAssembler;
 import com.didukh.routesservice.controller.model.StationModel;
 import com.didukh.routesservice.model.Route;
 import com.didukh.routesservice.model.Station;
 import com.didukh.routesservice.service.RouteService;
+import com.didukh.routesservice.service.StationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.web.bind.annotation.RestController;
 
+@RestController
 @RequiredArgsConstructor
 public class StationController implements StationApi {
 
-    private final RouteService routeService;
-    private final RouteAssembler routeAssembler;
-    private final PagedResourcesAssembler<Route> pagedResourcesAssembler;
+    private final StationService stationService;
+    private final StationAssembler stationAssembler;
+    private final PagedResourcesAssembler<Station> pagedResourcesAssembler;
 
     @Override
     public StationModel getStation(long id) {
-        return null;
+        return stationAssembler.toModel(stationService.getStation(id));
     }
 
     @Override
     public StationModel createStation(Station station) {
-        return null;
+        return stationAssembler.toModel(stationService.addStation(station));
     }
 
     @Override
     public StationModel updateStation(long id, Station station) {
-        return null;
+        return stationAssembler.toModel(stationService.updateStation(id,station));
     }
 
     @Override
     public StationModel deleteStation(long id) {
-        return null;
+        stationService.deleteStation(id);
+        return new StationModel();
     }
 
     @Override
     public PagedModel<StationModel> getAllStations(Pageable pageable) {
-        return null;
+        return pagedResourcesAssembler.toModel(stationService.getAllStations(pageable),stationAssembler);
     }
 }
